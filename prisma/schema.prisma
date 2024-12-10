@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  cars        Car[]
+  carModels   CarModel[]
+}
+
+model Car {
+  id                     Int                   @id @default(autoincrement())
+  companyId              Int
+  buildYear              Int
+  tone                   String
+  mileageTravelled       Float
+  fuelType               String
+  transmission           String
+  price                  Decimal
+  complianceYear         Int
+  seats                  Int
+  keys                   Int
+  exteriorColor          String
+  driveTrain             String
+  engineSize             Float
+  enginePower            Float
+  vin                    String                @unique
+  bodyType               String
+  odometer               Float
+  fuelTankCapacity       Float
+  fuelConsumption        Float
+  emissions              Float
+  ancapSafetyRating      Int
+  cylinders              Int
+  gearbox                String
+  towingCapacityBraked   Int
+  weight                 Int
+  length                 Int
+  images                 CarImage[]
+  popularFeatures        CarPopularFeature[]
+  installedOptions       CarInstalledOption[]
+  aftermarketAccessories CarAftermarketAccessory[]
+  standardFeatures       CarStandardFeature[]
+  serviceHistory         ServiceHistory[]
+  company                Company               @relation(fields: [companyId], references: [id])
+}
+
+model CarModel {
+  id         Int      @id @default(autoincrement())
+  companyId  Int
+  modelName  String
+  company    Company  @relation(fields: [companyId], references: [id])
+}
+
+model CarImage {
+  id     Int    @id @default(autoincrement())
+  image  String
+  carId  Int
+  car    Car    @relation(fields: [carId], references: [id])
+}
+
+model PopularFeature {
+  id    Int    @id @default(autoincrement())
+  image String
+  label String
+  cars  CarPopularFeature[]
+}
+
+model CarPopularFeature {
+  id               Int             @id @default(autoincrement())
+  popularFeatureId Int
+  carId            Int
+  car              Car             @relation(fields: [carId], references: [id])
+  popularFeature   PopularFeature  @relation(fields: [popularFeatureId], references: [id])
+}
+
+model InstalledOption {
+  id    Int    @id @default(autoincrement())
+  label String
+  cars  CarInstalledOption[]
+}
+
+model CarInstalledOption {
+  id                Int             @id @default(autoincrement())
+  installedOptionId Int
+  carId             Int
+  car               Car             @relation(fields: [carId], references: [id])
+  installedOption   InstalledOption @relation(fields: [installedOptionId], references: [id])
+}
+
+model AftermarketAccessory {
+  id    Int    @id @default(autoincrement())
+  label String
+  cars  CarAftermarketAccessory[]
+}
+
+model CarAftermarketAccessory {
+  id                      Int                   @id @default(autoincrement())
+  aftermarketAccessoryId  Int
+  carId                   Int
+  car                     Car                   @relation(fields: [carId], references: [id])
+  aftermarketAccessory    AftermarketAccessory  @relation(fields: [aftermarketAccessoryId], references: [id])
+}
+
+model StandardFeature {
+  id    Int    @id @default(autoincrement())
+  label String
+  cars  CarStandardFeature[]
+}
+
+model CarStandardFeature {
+  id               Int             @id @default(autoincrement())
+  standardFeatureId Int
+  carId            Int
+  car              Car             @relation(fields: [carId], references: [id])
+  standardFeature  StandardFeature @relation(fields: [standardFeatureId], references: [id])
+}
+
+model ServiceHistory {
+  id              Int      @id @default(autoincrement())
+  date            DateTime
+  mileageTravelled Float
+  carId           Int
+  car             Car      @relation(fields: [carId], references: [id])
+}
