@@ -49,6 +49,11 @@ export const validateCarCreate = z.object({
     .int()
     .positive({ message: "Seats must be a positive integer" }),
 
+  doors: z
+    .number({ required_error: "Doors are required" })
+    .int()
+    .positive({ message: "Doors must be a positive integer" }),
+
   keys: z
     .number({ required_error: "Keys count is required" })
     .int()
@@ -127,14 +132,19 @@ export const validateCarCreate = z.object({
     .number({ required_error: "Length is required" })
     .positive({ message: "Length must be a positive number" }),
 
-  // images: z
-  //   .array(z.string().regex(base64Regex, { message: "Invalid base64 image" }))
-  //   .min(1, { message: "At least one image is required" }),
+  images: z
+    .array(z.string())
+    .min(1, { message: "At least one image is required" }),
 
   companyId: z
     .number({ required_error: "Company ID is required" })
     .int()
     .positive({ message: "Company ID must be a positive integer" }),
+
+  modelId: z
+    .number({ required_error: "Model ID is required" })
+    .int()
+    .positive({ message: "Model ID must be a positive integer" }),
 
   popularFeatures: z.array(
     z
@@ -149,12 +159,9 @@ export const validateCarCreate = z.object({
       .positive({ message: "Installed option ID must be a positive integer" })
   ),
   aftermarketAccessories: z.array(
-    z
-      .number()
-      .int()
-      .positive({
-        message: "After market accessory ID must be a positive integer",
-      })
+    z.number().int().positive({
+      message: "After market accessory ID must be a positive integer",
+    })
   ),
   standardFeatures: z.array(
     z
@@ -176,4 +183,13 @@ export const validateCarCreate = z.object({
     .optional(),
 });
 
+export const validateSingleCarParams = z.object({
+  id: z.string({ required_error: "Car ID is required" }).trim().transform((id) => {
+    if (parseInt(id) <= 0) throw new Error("Car ID must be a positive integer");
+    if (isNaN(parseInt(id))) throw new Error("Invalid car ID");
+    return parseInt(id);
+  }),
+})
+
 export type Car = z.infer<typeof validateCarCreate>;
+export type SingleCarParams = z.infer<typeof validateSingleCarParams>;

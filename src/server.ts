@@ -27,7 +27,7 @@ process.on('unhandledRejection', (reason) => {
 app.listen(PORT, async () => {
     try {
         await prisma.$connect();
-        logger.info(`Database connected and server running on port ${PORT}`);
+        logger.info(`Database connected and server running on port http://localhost:${PORT}`);
     } catch (error) {
         logger.error('Database connection error', error);
         process.exit(1);

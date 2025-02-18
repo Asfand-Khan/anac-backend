@@ -8,15 +8,16 @@ datasource db {
 }
 
 model Company {
-  id          Int        @id @default(autoincrement())
-  name        String     @unique
-  cars        Car[]
-  carModels   CarModel[]
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  cars      Car[]
+  carModels CarModel[]
 }
 
 model Car {
-  id                     Int                   @id @default(autoincrement())
+  id                     Int                       @id @default(autoincrement())
   companyId              Int
+  carModelId             Int
   buildYear              Int
   tone                   String
   mileageTravelled       Float
@@ -30,7 +31,7 @@ model Car {
   driveTrain             String
   engineSize             Float
   enginePower            Float
-  vin                    String                @unique
+  vin                    String                    @unique
   bodyType               String
   odometer               Float
   fuelTankCapacity       Float
@@ -42,46 +43,49 @@ model Car {
   towingCapacityBraked   Int
   weight                 Int
   length                 Int
+  doors                  Int                       @default(4)
   images                 CarImage[]
   popularFeatures        CarPopularFeature[]
   installedOptions       CarInstalledOption[]
   aftermarketAccessories CarAftermarketAccessory[]
   standardFeatures       CarStandardFeature[]
   serviceHistory         ServiceHistory[]
-  company                Company               @relation(fields: [companyId], references: [id])
+  company                Company                   @relation(fields: [companyId], references: [id])
+  carModel               CarModel                  @relation(fields: [carModelId], references: [id])
 }
 
 model CarModel {
-  id         Int      @id @default(autoincrement())
-  companyId  Int
-  modelName  String
-  company    Company  @relation(fields: [companyId], references: [id])
+  id        Int     @id @default(autoincrement())
+  companyId Int
+  modelName String
+  company   Company @relation(fields: [companyId], references: [id])
+  cars      Car[]
 }
 
 model CarImage {
-  id     Int    @id @default(autoincrement())
-  image  String
-  carId  Int
-  car    Car    @relation(fields: [carId], references: [id])
+  id    Int    @id @default(autoincrement())
+  image String
+  carId Int
+  car   Car    @relation(fields: [carId], references: [id])
 }
 
 model PopularFeature {
-  id    Int    @id @default(autoincrement())
+  id    Int                 @id @default(autoincrement())
   image String
   label String
   cars  CarPopularFeature[]
 }
 
 model CarPopularFeature {
-  id               Int             @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   popularFeatureId Int
   carId            Int
-  car              Car             @relation(fields: [carId], references: [id])
-  popularFeature   PopularFeature  @relation(fields: [popularFeatureId], references: [id])
+  car              Car            @relation(fields: [carId], references: [id])
+  popularFeature   PopularFeature @relation(fields: [popularFeatureId], references: [id])
 }
 
 model InstalledOption {
-  id    Int    @id @default(autoincrement())
+  id    Int                  @id @default(autoincrement())
   label String
   cars  CarInstalledOption[]
 }
@@ -95,37 +99,37 @@ model CarInstalledOption {
 }
 
 model AftermarketAccessory {
-  id    Int    @id @default(autoincrement())
+  id    Int                       @id @default(autoincrement())
   label String
   cars  CarAftermarketAccessory[]
 }
 
 model CarAftermarketAccessory {
-  id                      Int                   @id @default(autoincrement())
-  aftermarketAccessoryId  Int
-  carId                   Int
-  car                     Car                   @relation(fields: [carId], references: [id])
-  aftermarketAccessory    AftermarketAccessory  @relation(fields: [aftermarketAccessoryId], references: [id])
+  id                     Int                  @id @default(autoincrement())
+  aftermarketAccessoryId Int
+  carId                  Int
+  car                    Car                  @relation(fields: [carId], references: [id])
+  aftermarketAccessory   AftermarketAccessory @relation(fields: [aftermarketAccessoryId], references: [id])
 }
 
 model StandardFeature {
-  id    Int    @id @default(autoincrement())
+  id    Int                  @id @default(autoincrement())
   label String
   cars  CarStandardFeature[]
 }
 
 model CarStandardFeature {
-  id               Int             @id @default(autoincrement())
+  id                Int             @id @default(autoincrement())
   standardFeatureId Int
-  carId            Int
-  car              Car             @relation(fields: [carId], references: [id])
-  standardFeature  StandardFeature @relation(fields: [standardFeatureId], references: [id])
+  carId             Int
+  car               Car             @relation(fields: [carId], references: [id])
+  standardFeature   StandardFeature @relation(fields: [standardFeatureId], references: [id])
 }
 
 model ServiceHistory {
-  id              Int      @id @default(autoincrement())
-  date            DateTime
+  id               Int      @id @default(autoincrement())
+  date             DateTime
   mileageTravelled Float
-  carId           Int
-  car             Car      @relation(fields: [carId], references: [id])
+  carId            Int
+  car              Car      @relation(fields: [carId], references: [id])
 }
