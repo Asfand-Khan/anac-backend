@@ -9,7 +9,7 @@ export const allPopularFeatures = async () => {
   try {
     return await prisma.popularFeature.findMany();
   } catch (error: any) {
-    return error.message;
+    throw error;
   }
 };
 
@@ -29,6 +29,6 @@ export const createPopularFeature = async (input: PopularFeature) => {
       },
     });
   } catch (error: any) {
-    return error.message;
+    throw error;
   }
 };

@@ -7,6 +7,6 @@ router.get("/", getAllCarsHandler); // For Fetching All Cars
 router.post("/", createCarsHandler); // For Creating Cars
 router.get("/:id", getSingleCarHandler); // For Fetching Single Car
 router.put("/:id", updateCarHandler); // For Updating Car
-router.delete("/:id", deleteCarHandler); // For Updating Car
+router.delete("/:id", deleteCarHandler); // For deleting Car
 
 export default router;

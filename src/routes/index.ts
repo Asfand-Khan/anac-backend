@@ -6,10 +6,12 @@ import modelRoutes from './modelRoutes';
 import standardFeatureRoutes from './standardFeaturesRoutes';
 import installedOptionsRoutes from './installedOptionsRoutes';
 import popularFeatureRoutes from './popularFeaturesRoutes';
+import userRoutes from './userRoutes';
 
 const router = Router();
 
 // Mount specific resource routes
+router.use('/users', userRoutes);
 router.use('/cars', carRoutes);
 router.use('/aftermarket-accessories', afterMarketAccessoriesRoutes);
 router.use('/companies', companyRoutes);

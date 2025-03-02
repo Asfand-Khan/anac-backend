@@ -207,8 +207,8 @@ export const allCars = async (query?: any) => {
     });
 
     return cars;
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -346,8 +346,8 @@ export const createCar = async (input: Car) => {
     }
 
     return car;
-  } catch (error: any) {
-    throw new Error (error.message);
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -386,8 +386,8 @@ export const getCar = async (input: SingleCarParams) => {
     if (!car) throw new Error("Car not found");
 
     return car;
-  } catch (error: any) {
-    throw new Error (error.message);
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -550,8 +550,8 @@ export const updateCar = async (input: Car, params: SingleCarParams) => {
     }
 
     return await getCar({ id: params.id });
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -587,7 +587,7 @@ export const deleteCar = async (input: SingleCarParams) => {
     });
 
     return car;
-  } catch (error: any) {
-    throw new Error (error.message);
+  } catch (error) {
+    throw error;
   }
 };

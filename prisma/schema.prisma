@@ -7,11 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id             Int     @id @default(autoincrement())
+  fullname       String
+  email          String  @unique
+  username       String  @unique
+  hashedPassword String  @db.LongText
+  phone          String
+  image          String?
+
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  
+  UserMenuRight UserMenuRight[]
+}
+
+model Menu {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  parentId BigInt?
+  url      String?
+  icon     String?
+  sorting  Int?
+
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+
+  UserMenuRight UserMenuRight[]
+}
+
+model UserMenuRight {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  menuId    Int
+  canView   Boolean @default(true)
+  canCreate Boolean @default(false)
+  canEdit   Boolean @default(false)
+  canDelete Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  menu Menu @relation(fields: [menuId], references: [id])
+
+  @@unique([userId, menuId])
+}
+
 model Company {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
   cars      Car[]
   carModels CarModel[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Car {
@@ -52,6 +103,9 @@ model Car {
   serviceHistory         ServiceHistory[]
   company                Company                   @relation(fields: [companyId], references: [id])
   carModel               CarModel                  @relation(fields: [carModelId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarModel {
@@ -60,6 +114,9 @@ model CarModel {
   modelName String
   company   Company @relation(fields: [companyId], references: [id])
   cars      Car[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarImage {
@@ -67,6 +124,9 @@ model CarImage {
   image String
   carId Int
   car   Car    @relation(fields: [carId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model PopularFeature {
@@ -74,6 +134,9 @@ model PopularFeature {
   image String
   label String
   cars  CarPopularFeature[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarPopularFeature {
@@ -82,12 +145,18 @@ model CarPopularFeature {
   carId            Int
   car              Car            @relation(fields: [carId], references: [id])
   popularFeature   PopularFeature @relation(fields: [popularFeatureId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model InstalledOption {
   id    Int                  @id @default(autoincrement())
   label String
   cars  CarInstalledOption[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarInstalledOption {
@@ -96,12 +165,18 @@ model CarInstalledOption {
   carId             Int
   car               Car             @relation(fields: [carId], references: [id])
   installedOption   InstalledOption @relation(fields: [installedOptionId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model AftermarketAccessory {
   id    Int                       @id @default(autoincrement())
   label String
   cars  CarAftermarketAccessory[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarAftermarketAccessory {
@@ -110,12 +185,18 @@ model CarAftermarketAccessory {
   carId                  Int
   car                    Car                  @relation(fields: [carId], references: [id])
   aftermarketAccessory   AftermarketAccessory @relation(fields: [aftermarketAccessoryId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model StandardFeature {
   id    Int                  @id @default(autoincrement())
   label String
   cars  CarStandardFeature[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model CarStandardFeature {
@@ -124,6 +205,9 @@ model CarStandardFeature {
   carId             Int
   car               Car             @relation(fields: [carId], references: [id])
   standardFeature   StandardFeature @relation(fields: [standardFeatureId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model ServiceHistory {
@@ -132,4 +216,7 @@ model ServiceHistory {
   mileageTravelled Float
   carId            Int
   car              Car      @relation(fields: [carId], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
