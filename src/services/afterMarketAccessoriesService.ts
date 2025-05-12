@@ -1,7 +1,7 @@
 import {
   AfterMarketAccessories,
   SingleAfterMarketParam,
-} from "../validations/afterMarketAccessoriesValidations";
+} from "../validations/customerValidations";
 import prisma from "../config/db";
 
 export const allAfterMarketAccessories = async () => {

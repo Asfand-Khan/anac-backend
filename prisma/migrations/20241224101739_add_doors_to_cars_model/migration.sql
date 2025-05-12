@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Car` ADD COLUMN `doors` INTEGER NOT NULL DEFAULT 4;

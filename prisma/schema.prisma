@@ -7,216 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Customer {
   id             Int     @id @default(autoincrement())
-  fullname       String
-  email          String  @unique
-  username       String  @unique
-  hashedPassword String  @db.LongText
-  phone          String
-  image          String?
+  customer_code  String
+  customer_name  String
+  contact_no     String
+  address        String
+  contact_person String?
 
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
-  
-  UserMenuRight UserMenuRight[]
+  units   Unit[]
+  Machine Machine[]
 }
 
-model Menu {
-  id       Int     @id @default(autoincrement())
-  name     String?
-  parentId BigInt?
-  url      String?
-  icon     String?
-  sorting  Int?
+model Unit {
+  id                  Int     @id @default(autoincrement())
+  unit_code           String
+  unit_name           String
+  unit_contact        String
+  unit_address        String?
+  unit_contact_person String?
 
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
+  customer_id Int
 
-  UserMenuRight UserMenuRight[]
+  customer Customer  @relation(fields: [customer_id], references: [id])
+  machines Machine[]
 }
 
-model UserMenuRight {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  menuId    Int
-  canView   Boolean @default(true)
-  canCreate Boolean @default(false)
-  canEdit   Boolean @default(false)
-  canDelete Boolean @default(false)
+model Machine {
+  id                 Int     @id @default(autoincrement())
+  machine_kind       String
+  machine_make       String
+  machine_type       String
+  other_machine_make String?
+  other_machine_type String?
+  machine_info1      String?
+  machine_info2      String?
+  machine_id         String?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  unit_id     Int
+  customer_id Int
 
-  user User @relation(fields: [userId], references: [id])
-  menu Menu @relation(fields: [menuId], references: [id])
-
-  @@unique([userId, menuId])
+  unit     Unit     @relation(fields: [unit_id], references: [id])
+  customer Customer @relation(fields: [customer_id], references: [id])
+  parts    Part[]
 }
 
-model Company {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+model Part {
+  id               Int     @id @default(autoincrement())
+  analysis_type    String
+  part_kind        String
+  part_make        String
+  part_type        String
+  bi_carbunation   Boolean @default(false)
+  other_part_make  String?
+  other_part_type  String?
+  part_info        String?
+  part_id          String?
+  capacity_in_ltrs Float?
 
-  cars      Car[]
-  carModels CarModel[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model Car {
-  id                     Int                       @id @default(autoincrement())
-  companyId              Int
-  carModelId             Int
-  buildYear              Int
-  tone                   String
-  mileageTravelled       Float
-  fuelType               String
-  transmission           String
-  price                  Decimal
-  complianceYear         Int
-  seats                  Int
-  keys                   Int
-  exteriorColor          String
-  driveTrain             String
-  engineSize             Float
-  enginePower            Float
-  vin                    String                    @unique
-  bodyType               String
-  odometer               Float
-  fuelTankCapacity       Float
-  fuelConsumption        Float
-  emissions              Float
-  ancapSafetyRating      Int
-  cylinders              Int
-  gearbox                String
-  towingCapacityBraked   Int
-  weight                 Int
-  length                 Int
-  doors                  Int                       @default(4)
-  images                 CarImage[]
-  popularFeatures        CarPopularFeature[]
-  installedOptions       CarInstalledOption[]
-  aftermarketAccessories CarAftermarketAccessory[]
-  standardFeatures       CarStandardFeature[]
-  serviceHistory         ServiceHistory[]
-  company                Company                   @relation(fields: [companyId], references: [id])
-  carModel               CarModel                  @relation(fields: [carModelId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarModel {
-  id        Int     @id @default(autoincrement())
-  companyId Int
-  modelName String
-  company   Company @relation(fields: [companyId], references: [id])
-  cars      Car[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarImage {
-  id    Int    @id @default(autoincrement())
-  image String
-  carId Int
-  car   Car    @relation(fields: [carId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model PopularFeature {
-  id    Int                 @id @default(autoincrement())
-  image String
-  label String
-  cars  CarPopularFeature[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarPopularFeature {
-  id               Int            @id @default(autoincrement())
-  popularFeatureId Int
-  carId            Int
-  car              Car            @relation(fields: [carId], references: [id])
-  popularFeature   PopularFeature @relation(fields: [popularFeatureId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model InstalledOption {
-  id    Int                  @id @default(autoincrement())
-  label String
-  cars  CarInstalledOption[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarInstalledOption {
-  id                Int             @id @default(autoincrement())
-  installedOptionId Int
-  carId             Int
-  car               Car             @relation(fields: [carId], references: [id])
-  installedOption   InstalledOption @relation(fields: [installedOptionId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model AftermarketAccessory {
-  id    Int                       @id @default(autoincrement())
-  label String
-  cars  CarAftermarketAccessory[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarAftermarketAccessory {
-  id                     Int                  @id @default(autoincrement())
-  aftermarketAccessoryId Int
-  carId                  Int
-  car                    Car                  @relation(fields: [carId], references: [id])
-  aftermarketAccessory   AftermarketAccessory @relation(fields: [aftermarketAccessoryId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model StandardFeature {
-  id    Int                  @id @default(autoincrement())
-  label String
-  cars  CarStandardFeature[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model CarStandardFeature {
-  id                Int             @id @default(autoincrement())
-  standardFeatureId Int
-  carId             Int
-  car               Car             @relation(fields: [carId], references: [id])
-  standardFeature   StandardFeature @relation(fields: [standardFeatureId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model ServiceHistory {
-  id               Int      @id @default(autoincrement())
-  date             DateTime
-  mileageTravelled Float
-  carId            Int
-  car              Car      @relation(fields: [carId], references: [id])
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  machine_id Int
+  machine    Machine @relation(fields: [machine_id], references: [id])
 }

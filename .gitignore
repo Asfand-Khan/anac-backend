@@ -12,6 +12,7 @@
 /build
 /.next
 /out
+/generated
 
 # IDE and Editor files
 .idea/

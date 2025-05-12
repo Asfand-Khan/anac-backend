@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import {
+  allMenus,
   allUsers,
   authenticateUsers,
   createUser,
@@ -110,6 +111,35 @@ export const loginUsersHandler = async (
       status: "1",
       message: "Success: User Login Successfull",
       payload: user,
+    });
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        status: "0",
+        message: error.errors[0].message,
+        payload: [],
+      });
+    }
+
+    return res.status(500).json({
+      message: error.message,
+      payload: [],
+      status: "0",
+    });
+  }
+};
+
+
+export const getAllMenusHandler = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const menus = await allMenus();
+    return res.status(200).json({
+      status: "1",
+      message: "Success: Menus Fetched Successfully",
+      payload: menus,
     });
   } catch (error: any) {
     if (error instanceof z.ZodError) {

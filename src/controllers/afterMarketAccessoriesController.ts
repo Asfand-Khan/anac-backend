@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   validateAfterMarketAccessoriesCreate,
   validateSingleAftermarketAccParams,
-} from "../validations/afterMarketAccessoriesValidations";
+} from "../validations/customerValidations";
 import {
   allAfterMarketAccessories,
   createAfterMarketAccessories,
