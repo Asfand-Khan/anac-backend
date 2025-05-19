@@ -125,7 +125,7 @@ export const updatePart = async (req: Request, res: Response): Promise<any> => {
     const parsedParams = validatePartParams.parse(req.params);
     const parsedPart = validatePart.parse(req.body);
 
-    const ifExists = await prisma.machine.findUnique({
+    const ifExists = await prisma.part.findUnique({
       where: { id: parsedParams.id },
     });
 
@@ -137,7 +137,7 @@ export const updatePart = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const updatedPart = await prisma.customer.update({
+    const updatedPart = await prisma.part.update({
       data: parsedPart,
       where: {
         id: parsedParams.id,

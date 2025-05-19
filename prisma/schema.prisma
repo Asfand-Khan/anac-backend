@@ -50,6 +50,7 @@ model Machine {
   unit     Unit     @relation(fields: [unit_id], references: [id])
   customer Customer @relation(fields: [customer_id], references: [id])
   parts    Part[]
+  Sample   Sample[]
 }
 
 model Part {
@@ -64,6 +65,29 @@ model Part {
   part_info        String?
   part_id          String?
   capacity_in_ltrs Float?
+
+  machine_id Int
+  machine    Machine  @relation(fields: [machine_id], references: [id])
+  Sample     Sample[]
+}
+
+model Sample {
+  id                  Int     @id @default(autoincrement())
+  barcode_no          String
+  sample_date         String
+  intermediate_sample Boolean
+  total_mileage       Int
+  mileage_unit        String
+  fluid_time          String
+  top_up              Int
+  top_up_unit         String
+  fluid_name          String
+  fluid_make          String?
+  fluid_type          String?
+  fluid_grade         String?
+
+  part_id Int
+  part    Part @relation(fields: [part_id], references: [id])
 
   machine_id Int
   machine    Machine @relation(fields: [machine_id], references: [id])
