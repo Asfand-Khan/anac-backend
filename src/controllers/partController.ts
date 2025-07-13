@@ -200,3 +200,44 @@ export const deletePart = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
+
+export const partReport = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const parsedParams = validatePartParams.parse(req.body);
+    const part = await prisma.$queryRaw`
+    SELECT
+	    sr.* 
+    FROM
+	    Part p
+	  LEFT JOIN Sample s ON p.id = s.part_id
+	  LEFT JOIN SampleResult sr ON s.barcode_no = sr.label 
+    WHERE
+	    p.id = ${parsedParams.id}
+    ORDER BY
+	    created_at DESC 
+	  LIMIT 0,5
+    `;
+
+    return res.status(200).json({
+      status: 1,
+      message: "Success: Part report fetched successfully",
+      payload: part,
+    });
+  } catch (err) {
+    console.error("Error fetching part report:", err);
+
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        status: 0,
+        message: err.errors[0].message,
+        payload: [],
+      });
+    }
+
+    return res.status(500).json({
+      status: 0,
+      message: "While fetching part report, An unexpected error occurred",
+      payload: [],
+    });
+  }
+};
